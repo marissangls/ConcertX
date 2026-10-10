@@ -16,7 +16,7 @@ class DatabaseHelper(context: Context) :
         db.execSQL(
             """
             CREATE TABLE Users (
-                UserID INTEGER(10) PRIMARY KEY AUTOINCREMENT,
+                UserID INTEGER PRIMARY KEY AUTOINCREMENT,
                 Email VARCHAR(255) NOT NULL,
                 Username VARCHAR(255) NOT NULL UNIQUE,
                 PhoneNumber VARCHAR(255) NOT NULL,
@@ -28,7 +28,7 @@ class DatabaseHelper(context: Context) :
         db.execSQL(
             """
             CREATE TABLE Concerts (
-                ConcertID INTEGER(10) PRIMARY KEY,
+                ConcertID INTEGER PRIMARY KEY,
                 Title VARCHAR(255) NOT NULL,
                 Artist VARCHAR(255) NOT NULL,
                 Venue VARCHAR(255) NOT NULL,
@@ -47,7 +47,7 @@ class DatabaseHelper(context: Context) :
         db.execSQL(
             """
             CREATE TABLE "Transaction" (
-                TransactionID INTEGER(10) PRIMARY KEY AUTOINCREMENT,
+                TransactionID INTEGER PRIMARY KEY AUTOINCREMENT,
                 UserId INTEGER(10) NOT NULL,
                 ConcertId INTEGER(10) NOT NULL,
                 Quantity INTEGER(10) NOT NULL,
@@ -63,5 +63,48 @@ class DatabaseHelper(context: Context) :
         db.execSQL("DROP TABLE IF EXISTS Concerts")
         db.execSQL("DROP TABLE IF EXISTS Users")
         onCreate(db)
+    }
+
+    fun isUsernameExists(username: String): Boolean {
+        val result = readableDatabase.rawQuery(
+            "SELECT * FROM Users WHERE Username = ?", arrayOf(username)
+        )
+        val exists = result.count > 0
+        result.close()
+        return exists
+    }
+
+    fun getPhoneByUsername(username: String): String? {
+        val result = readableDatabase.rawQuery(
+            "SELECT PhoneNumber FROM Users WHERE Username = ?", arrayOf(username)
+        )
+        var phone: String? = null
+        if (result.moveToFirst()) {
+            phone = result.getString(0)
+        }
+        result.close()
+        return phone
+    }
+
+    fun insertUser(username: String, email: String, phone: String, password: String): Boolean {
+        return try {
+            writableDatabase.execSQL(
+                "INSERT INTO Users (Username, Email, PhoneNumber, Password) VALUES (?, ?, ?, ?)",
+                arrayOf(username, email, phone, password)
+            )
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun checkLogin(username: String, password: String): Boolean {
+        val result = readableDatabase.rawQuery(
+            "SELECT * FROM Users WHERE Username = ? AND Password = ?",
+            arrayOf(username, password)
+        )
+        val valid = result.count > 0
+        result.close()
+        return valid
     }
 }
