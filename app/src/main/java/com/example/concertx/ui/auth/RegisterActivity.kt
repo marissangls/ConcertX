@@ -12,7 +12,7 @@ import com.example.concertx.DatabaseHelper
 import android.widget.EditText
 import android.widget.Button
 import android.widget.Toast
-import com.example.concertx.ui.home.HomeActivity
+import android.util.Patterns
 
 class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,14 +48,20 @@ class RegisterActivity : AppCompatActivity() {
             } else if (password.isEmpty()) {
                 Toast.makeText(this, "Password must be filled", Toast.LENGTH_SHORT).show()
             } else if (db.isUsernameExists(username)) {
-                Toast.makeText(this, "Username unavailable", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Username already taken, try another username!", Toast.LENGTH_SHORT).show()
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "Email format is invalid", Toast.LENGTH_SHORT).show()
+            } else if (!phone.all { it.isDigit() } || phone.length < 10 || phone.length > 13) {
+                Toast.makeText(this, "Phone number must be 10-13 digits", Toast.LENGTH_SHORT).show()
+            } else if (password.length < 5) {
+                Toast.makeText(this, "Password must be at least 5 characters", Toast.LENGTH_SHORT).show()
             } else {
                 val registered = db.insertUser(username, email, phone, password)
 
                 if(registered) {
                     Toast.makeText(this, "Account created!", Toast.LENGTH_SHORT).show()
 
-                    startActivity(Intent(this, HomeActivity::class.java))
+                    startActivity(Intent(this, LoginActivity::class.java))
                     finish()
                 } else {
                     Toast.makeText(this, "Failed to create account", Toast.LENGTH_SHORT).show()
