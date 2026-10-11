@@ -46,7 +46,13 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show()
 
-                startActivity(Intent(this, HomeActivity::class.java))
+                val otp = (100000..999999).random().toString()
+                val intent = Intent(this, OtpActivity::class.java)
+                intent.putExtra("otp", otp)
+                intent.putExtra("sentAt", System.currentTimeMillis())
+                startActivity(intent)
+
+                Toast.makeText(this, "test dlu ini otpnye: $otp", Toast.LENGTH_LONG).show()
                 finish()
             }
         }
