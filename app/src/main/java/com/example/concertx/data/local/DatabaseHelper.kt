@@ -1,4 +1,4 @@
-package com.example.concertx
+package com.example.concertx.data.local
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase

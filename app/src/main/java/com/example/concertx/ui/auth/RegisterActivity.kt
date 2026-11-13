@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.concertx.R
-import com.example.concertx.DatabaseHelper
+import com.example.concertx.data.local.DatabaseHelper
 import android.widget.EditText
 import android.widget.Button
 import android.widget.Toast

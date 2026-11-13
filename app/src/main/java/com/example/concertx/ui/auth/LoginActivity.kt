@@ -8,13 +8,57 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.concertx.R
-import com.example.concertx.DatabaseHelper
+import com.example.concertx.data.local.DatabaseHelper
 import android.widget.EditText
 import android.widget.Button
 import android.widget.Toast
-import com.example.concertx.ui.home.HomeActivity
+
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+
+import com.example.concertx.data.remote.SmsSender
 
 class LoginActivity : AppCompatActivity() {
+    private var pendingUsername = ""
+    private val smsPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {granted ->
+        if(granted){
+            proceedToOtp(pendingUsername)
+        }else {
+            Toast.makeText(this, "SMS Permission is Required!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun proceedToOtp(username: String){
+        val db = DatabaseHelper(this)
+        // ambil nomor telepon utk bisa kirim sms
+        val phone = db.getPhoneByUsername(username)
+
+        if(phone == null){
+            Toast.makeText(this, "Phone Number NOt Found", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val otp = (100000..999999).random().toString()
+
+        val sent = SmsSender.sendOtp(this, phone, otp)
+        if(!sent){
+            Toast.makeText(this, "Failed to send OTP", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val intent = Intent(this, OtpActivity::class.java)
+        intent.putExtra("otp", otp)
+        intent.putExtra("sentAt", System.currentTimeMillis())
+        intent.putExtra("username", username)
+        startActivity(intent)
+
+        Toast.makeText(this, "test dlu ini otpnye: $otp", Toast.LENGTH_LONG).show()
+        finish()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -44,16 +88,23 @@ class LoginActivity : AppCompatActivity() {
             } else if (!db.checkLogin(username, password)) {
                 Toast.makeText(this, "Password is incorrect", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show()
+//
+//                val otp = (100000..999999).random().toString()
+//                val intent = Intent(this, OtpActivity::class.java)
+//                intent.putExtra("otp", otp)
+//                intent.putExtra("sentAt", System.currentTimeMillis())
+//                startActivity(intent)
+//
+//                Toast.makeText(this, "test dlu ini otpnye: $otp", Toast.LENGTH_LONG).show()
+//                finish()
 
-                val otp = (100000..999999).random().toString()
-                val intent = Intent(this, OtpActivity::class.java)
-                intent.putExtra("otp", otp)
-                intent.putExtra("sentAt", System.currentTimeMillis())
-                startActivity(intent)
-
-                Toast.makeText(this, "test dlu ini otpnye: $otp", Toast.LENGTH_LONG).show()
-                finish()
+                pendingUsername = username
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED){
+                    proceedToOtp(username)
+                }else{
+                    smsPermissionLauncher.launch(Manifest.permission.SEND_SMS)
+                }
             }
         }
 
