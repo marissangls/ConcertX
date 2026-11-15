@@ -1,9 +1,64 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.ConcertX" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Theme.ConcertX" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/coral</item>
+        <item name="colorOnPrimary">@color/ink_black</item>
+
+        <item name="colorSecondary">@color/crimson</item>
+        <item name="colorOnSecondary">@color/floral_white</item>
+        <item name="colorSecondaryContainer">@color/crimson</item>
+        <item name="colorOnSecondaryContainer">@color/floral_white</item>
+
+        <item name="android:colorBackground">@color/ink_black</item>
+        <item name="colorOnBackground">@color/floral_white</item>
+
+        <item name="colorSurface">@color/surface_dark</item>
+        <item name="colorOnSurface">@color/floral_white</item>
+        <item name="colorSurfaceVariant">@color/surface_dark</item>
+        <item name="colorOnSurfaceVariant">@color/slate_grey</item>
+        <item name="colorOutline">@color/slate_grey</item>
+
+        <item name="android:textColorPrimary">@color/floral_white</item>
+        <item name="android:textColorSecondary">@color/slate_grey</item>
+
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="fontFamily">@font/poppins</item>
+
+        <item name="materialButtonStyle">@style/Widget.ConcertX.Button</item>
     </style>
 
-    <style name="Theme.ConcertX" parent="Base.Theme.ConcertX" />
+    <style name="Widget.ConcertX.Button" parent="Widget.Material3.Button">
+        <item name="shapeAppearance">@style/ShapeAppearance.ConcertX.Button</item>
+        <item name="android:minHeight">52dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/poppins</item>
+    </style>
+
+    <style name="ShapeAppearance.ConcertX.Button" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="Widget.ConcertX.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/surface_dark</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+    </style>
+
+    <style name="TextAppearance.ConcertX.Headline" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">@font/dm_serif_display</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:textColor">@color/floral_white</item>
+    </style>
+
+    <style name="Widget.ConcertX.OtpBox" parent="">
+        <item name="android:background">@drawable/bg_otp_box</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:importantForAutofill">no</item>
+    </style>
 </resources>
