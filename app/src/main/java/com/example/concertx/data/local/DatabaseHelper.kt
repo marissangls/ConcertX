@@ -107,4 +107,21 @@ class DatabaseHelper(context: Context) :
         result.close()
         return valid
     }
+
+    fun getUserByUsername(username: String): User? {
+        val result = readableDatabase.rawQuery(
+            "SELECT Username, Email, PhoneNumber FROM Users WHERE Username = ?",
+            arrayOf(username)
+        )
+        var user: User? = null
+        if (result.moveToFirst()) {
+            user = User(
+                username = result.getString(0),
+                email = result.getString(1),
+                phone = result.getString(2)
+            )
+        }
+        result.close()
+        return user
+    }
 }

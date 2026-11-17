@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
 import com.example.concertx.R
 import com.example.concertx.ui.home.HomeActivity
+import com.example.concertx.data.local.SessionManager
 
 class OtpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +28,7 @@ class OtpActivity : AppCompatActivity() {
 
         var otpCode = intent.getStringExtra("otp") ?: ""
         var sentAt = intent.getLongExtra("sentAt", 0L)
+        val username = intent.getStringExtra("username") ?: ""
 
         val etOtp1 = findViewById<EditText>(R.id.etOtp1)
         val etOtp2 = findViewById<EditText>(R.id.etOtp2)
@@ -74,6 +76,7 @@ class OtpActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "OTP verified", Toast.LENGTH_SHORT).show()
 
+                SessionManager(this).saveSession(username)
                 startActivity(Intent(this, HomeActivity::class.java))
                 finish()
             }
