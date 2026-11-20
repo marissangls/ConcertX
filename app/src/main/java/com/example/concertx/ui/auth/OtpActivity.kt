@@ -2,6 +2,7 @@ package com.example.concertx.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -12,8 +13,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
 import com.example.concertx.R
+import com.example.concertx.data.local.DatabaseHelper
 import com.example.concertx.ui.home.HomeActivity
 import com.example.concertx.data.local.SessionManager
+import com.example.concertx.data.remote.SmsSender
 
 class OtpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,11 +85,44 @@ class OtpActivity : AppCompatActivity() {
             }
         }
 
+        var resendCount = 0
+        val db = DatabaseHelper(this)
         val tvResend = findViewById<TextView>(R.id.tvResend)
+
+        fun startThirtyCooldown(){
+            tvResend.isEnabled = false
+            object : CountDownTimer(30000, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    tvResend.text = "Resend Code: ${millisUntilFinished / 1000}"
+                }
+                override fun onFinish() {
+                    tvResend.text = "Resend Code"
+                    tvResend.isEnabled = true
+                }
+            }.start()
+
+
+        }
+
         tvResend.setOnClickListener {
-            otpCode = (100000..999999).random().toString()
+            if(resendCount >= 3){
+                Toast.makeText(this, "Reached 3 otp limit attempt", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val phone = db.getPhoneByUsername(username)?: return@setOnClickListener
+
+            val newOtpCode = (100000..999999).random().toString()
+
+            if(!SmsSender.sendOtp(this, phone, newOtpCode)){
+                Toast.makeText(this, "Failed to send Otp", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            otpCode = newOtpCode
             sentAt = System.currentTimeMillis()
+            resendCount++
             Toast.makeText(this, "ni otp yg neww new $otpCode", Toast.LENGTH_SHORT).show()
+            startThirtyCooldown()
         }
     }
 }
