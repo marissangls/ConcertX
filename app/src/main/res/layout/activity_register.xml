@@ -48,7 +48,7 @@
                         app:fontFamily="@font/dm_serif_display"
                         android:text="Concert"
                         android:textColor="@color/floral_white"
-                        android:textSize="26sp"/>
+                        android:textAppearance="@style/TextAppearance.ConcertX.Wordmark"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -57,7 +57,7 @@
                         app:fontFamily="@font/dm_serif_display"
                         android:text="X"
                         android:textColor="@color/coral"
-                        android:textSize="26sp"/>
+                        android:textAppearance="@style/TextAppearance.ConcertX.Wordmark"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -78,7 +78,7 @@
                 android:gravity="center"
                 android:text="Start your journey with ConcertX"
                 android:textColor="?android:attr/textColorSecondary"
-                android:textSize="14sp"/>
+                android:textAppearance="@style/TextAppearance.ConcertX.Body"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.ConcertX.TextInputLayout"

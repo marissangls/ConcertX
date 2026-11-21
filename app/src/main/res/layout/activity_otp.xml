@@ -47,7 +47,7 @@
                         app:fontFamily="@font/dm_serif_display"
                         android:text="Concert"
                         android:textColor="@color/floral_white"
-                        android:textSize="26sp"/>
+                        android:textAppearance="@style/TextAppearance.ConcertX.Wordmark"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
                         app:fontFamily="@font/dm_serif_display"
                         android:text="X"
                         android:textColor="@color/coral"
-                        android:textSize="26sp"/>
+                        android:textAppearance="@style/TextAppearance.ConcertX.Wordmark"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -77,7 +77,7 @@
                 android:gravity="center"
                 android:text="Enter the 6-digit code sent to your phone"
                 android:textColor="?android:attr/textColorSecondary"
-                android:textSize="14sp"/>
+                android:textAppearance="@style/TextAppearance.ConcertX.Body"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
