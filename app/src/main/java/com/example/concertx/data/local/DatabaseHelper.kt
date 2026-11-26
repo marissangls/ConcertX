@@ -124,4 +124,37 @@ class DatabaseHelper(context: Context) :
         result.close()
         return user
     }
+
+    fun insertConcert(c: Concert){
+        writableDatabase.execSQL(
+            "INSERT OR IGNORE INTO Concerts (ConcertID, Title, Artist, Venue, City, Latitude, Longitude, Date, Price, Image, Description, Stock) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)".trimIndent(),
+            arrayOf(c.id, c.title, c.artist, c.venue, c.city, c.latitude, c.longitude,
+                c.date, c.price, c.image, c.description, c.stock)
+        )
+    }
+
+    fun getAllConcerts(): List<Concert>{
+        val list = mutableListOf<Concert>()
+        val result = readableDatabase.rawQuery("SELECT ConcertID, Title, Artist, Venue, City, Latitude, Longitude, Date, Price, Image, Description, Stock FROM Concerts ORDER BY ConcertID", null)
+        while(result.moveToNext()){
+            list.add(
+                Concert(
+                    id = result.getInt(0),
+                    title = result.getString(1),
+                    artist = result.getString(2),
+                    venue = result.getString(3),
+                    city = result.getString(4),
+                    latitude = result.getDouble(5),
+                    longitude = result.getDouble(6),
+                    date = result.getString(7),
+                    price = result.getInt(8),
+                    image = result.getString(9) ?: "",
+                    description = result.getString(10) ?: "",
+                    stock = result.getInt(11)
+                )
+            )
+        }
+        result.close()
+        return list
+    }
 }
